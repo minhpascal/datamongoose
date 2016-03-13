@@ -102,6 +102,14 @@ def clean_db(
     # Sort the dataframe based on ascending dates.
     r = r.sort_index(ascending=True)
 
+    # Convert dataframe columns to float and ints.
+    if tf == "tick":
+        r[['Last', 'Bid', 'Ask']] = r[['Last', 'Bid', 'Ask']].astype(float)
+        r[['Size', 'Volume', 'TickID', 'Bid Size', 'Ask Size']].astype(int)
+    else:
+        r[['High', 'Low', 'Open', 'Close']] = r[['High', 'Low', 'Open', 'Close']].astype(float)
+        r[['Volume', 'OI']] = r[['Volume', 'OI']].astype(int)
+
     # Pickle the file.
     r.to_pickle("%s/%s_%s.pkl" % (cache, symbol, tf))
 
@@ -175,6 +183,14 @@ def update_db(
 
     # Sort the dataframe based on ascending dates.
     r = r.sort_index(ascending=True)
+
+    # Convert dataframe columns to float and ints.
+    if tf == "tick":
+        r[['Last', 'Bid', 'Ask']] = r[['Last', 'Bid', 'Ask']].astype(float)
+        r[['Size', 'Volume', 'TickID', 'Bid Size', 'Ask Size']].astype(int)
+    else:
+        r[['High', 'Low', 'Open', 'Close']] = r[['High', 'Low', 'Open', 'Close']].astype(float)
+        r[['Volume', 'OI']] = r[['Volume', 'OI']].astype(int)
 
     hist_data = pd.io.pickle.read_pickle("%s/%s_%s.pkl" % (cache, symbol, tf))
     new_data = pd.concat([hist_data, r]).drop_duplicates(keep='last')
